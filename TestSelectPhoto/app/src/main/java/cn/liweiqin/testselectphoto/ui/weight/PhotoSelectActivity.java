@@ -1,13 +1,24 @@
 package cn.liweiqin.testselectphoto.ui.weight;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import java.util.HashMap;
+import java.util.List;
+
 import cn.liweiqin.testselectphoto.BasePhotoActivity;
+import cn.liweiqin.testselectphoto.FunctionConfig;
+import cn.liweiqin.testselectphoto.PhotoFinal;
 import cn.liweiqin.testselectphoto.R;
+import cn.liweiqin.testselectphoto.model.PhotoFolderInfo;
+import cn.liweiqin.testselectphoto.model.PhotoInfo;
+import cn.liweiqin.testselectphoto.ui.adpater.FolderListAdapter;
+import cn.liweiqin.testselectphoto.ui.adpater.PhotoListAdapter;
 
 
 /**
@@ -15,7 +26,7 @@ import cn.liweiqin.testselectphoto.R;
  * <p/>
  * Created by liweiqin on 2016/1/31.
  */
-public class PhotoSelectActivity extends BasePhotoActivity {
+public class PhotoSelectActivity extends BasePhotoActivity implements View.OnClickListener {
 
     /**
      * loading...
@@ -49,11 +60,42 @@ public class PhotoSelectActivity extends BasePhotoActivity {
      */
     private ListView lv_folder_list;
 
+    /**
+     * 当前展示图片的list
+     */
+    private List<PhotoInfo> mCurrentList;
+    private PhotoListAdapter mPhotoListAdapter;
+
+
+    /**
+     * 所有的图片文件列表
+     */
+    private List<PhotoFolderInfo> mAllPhotoFolderList;
+    private FolderListAdapter mFolderListAdapter;
+
+    private FunctionConfig mFunctionConfig;
+    /**
+     * current selected picture
+     */
+    private HashMap<String, PhotoInfo> mSelectPhotoMap = new HashMap<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mFunctionConfig = PhotoFinal.getFunctionConfig();
+        setContentView(R.layout.activity_select);
         initView();
+        setClikListener();
+
+
+    }
+
+    private void setClikListener() {
+        iv_back.setOnClickListener(this);
+        tv_select_finish.setOnClickListener(this);
+        tv_photo_folder.setOnClickListener(this);
+
     }
 
     private void initView() {
@@ -66,6 +108,19 @@ public class PhotoSelectActivity extends BasePhotoActivity {
         lv_folder_list = (ListView) findViewById(R.id.lv_folder_list);
     }
 
-    
 
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        switch (id) {
+            case R.id.tv_select_finish:
+                break;
+            case R.id.iv_back:
+                break;
+            case R.id.tv_photo_folder:
+                break;
+            default:
+                break;
+        }
+    }
 }
