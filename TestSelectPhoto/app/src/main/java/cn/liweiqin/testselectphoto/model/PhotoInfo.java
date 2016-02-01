@@ -9,7 +9,7 @@ public class PhotoInfo implements Serializable {
     public PhotoInfo() {
     }
 
-    private String photoId;
+    private int photoId;
     private String photoPath;
     private int width;
     private int height;
@@ -38,11 +38,11 @@ public class PhotoInfo implements Serializable {
         this.photoPath = photoPath;
     }
 
-    public String getPhotoId() {
+    public int getPhotoId() {
         return photoId;
     }
 
-    public void setPhotoId(String photoId) {
+    public void setPhotoId(int photoId) {
         this.photoId = photoId;
     }
 }

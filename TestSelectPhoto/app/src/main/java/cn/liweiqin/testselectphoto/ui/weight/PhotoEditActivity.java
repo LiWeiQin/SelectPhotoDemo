@@ -7,7 +7,7 @@ import cn.liweiqin.testselectphoto.BasePhotoActivity;
  */
 public class PhotoEditActivity extends BasePhotoActivity {
 
-    static final String TAKE_PHOTO_ACTION = "take_photo_action";
+    public static final String TAKE_PHOTO_ACTION = "take_photo_action";
 
 
 }

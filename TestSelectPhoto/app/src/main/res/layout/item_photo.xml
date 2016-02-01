@@ -16,6 +16,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top|right"
-        android:src="@drawable/ic_gf_done" />
+        android:src="@drawable/photo_select" />
 
 </FrameLayout>
