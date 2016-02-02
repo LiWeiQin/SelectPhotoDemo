@@ -35,12 +35,18 @@ public class PhotoUtil {
             MediaStore.Images.Thumbnails.DATA
     };
 
-    public static void display(Activity activity, String path, ImageView imageView) {
+    public static void display(Activity activity, String path, ImageView imageView, int width, int height) {
         if (isNotNull(activity, imageView)) return;
+        imageView.setImageResource(R.drawable.ic_gf_default_photo);
         if (null == path) {
             Picasso.with(activity).load(R.drawable.ic_gf_default_photo).into(imageView);
         }
-        Picasso.with(activity).load(new File(path)).error(defaultDrawable).into(imageView);
+        Picasso.with(activity)
+                .load(new File(path))
+                .error(defaultDrawable)
+                .resize(width, height)
+                .centerInside()
+                .into(imageView);
 
     }
 
@@ -118,6 +124,7 @@ public class PhotoUtil {
                             allPhotoFolderList.add(photoFolderInfo);
                         }
                         photoFolderInfo.getPhotoInfoList().add(photoInfo);
+
                         if (selectedList != null && selectedList.size() > 0 && selectedList.contains(path)) {
                             mSelectPhotoMap.put(path, photoInfo);
                         }

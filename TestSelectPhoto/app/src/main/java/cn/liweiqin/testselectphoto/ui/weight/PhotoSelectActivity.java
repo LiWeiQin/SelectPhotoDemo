@@ -1,15 +1,17 @@
 package cn.liweiqin.testselectphoto.ui.weight;
 
-import android.Manifest;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,7 +25,6 @@ import cn.liweiqin.testselectphoto.model.PhotoFolderInfo;
 import cn.liweiqin.testselectphoto.model.PhotoInfo;
 import cn.liweiqin.testselectphoto.ui.adpater.FolderListAdapter;
 import cn.liweiqin.testselectphoto.ui.adpater.PhotoListAdapter;
-import cn.liweiqin.testselectphoto.utils.EasyPermissions;
 import cn.liweiqin.testselectphoto.utils.PhotoUtil;
 
 
@@ -32,10 +33,10 @@ import cn.liweiqin.testselectphoto.utils.PhotoUtil;
  * <p/>
  * Created by liweiqin on 2016/1/31.
  */
-public class PhotoSelectActivity extends BasePhotoActivity implements View.OnClickListener {
+public class PhotoSelectActivity extends BasePhotoActivity implements View.OnClickListener, AbsListView.OnItemClickListener {
 
-    private final int HANLDER_TAKE_PHOTO_EVENT = 1000;
-    private final int HANDLER_REFRESH_LIST_EVENT = 1002;
+    public static final int HANLDER_TAKE_PHOTO_EVENT = 1000;
+    public static final int HANDLER_REFRESH_LIST_EVENT = 1002;
 
     /**
      * loading...
@@ -126,29 +127,22 @@ public class PhotoSelectActivity extends BasePhotoActivity implements View.OnCli
         lv_folder_list.setAdapter(mFolderListAdapter);
 
         refreshSelectCount();
-        requestPhotoPermission();
+        getPhotos();
 
 
     }
 
-    private void requestPhotoPermission() {
-        if (EasyPermissions.hasPermissions(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            getPhotos();
-        } else {
-            // Ask for one permission
-            EasyPermissions.requestPermissions(this, "请求访问相册",
-                    PhotoFinal.PERMISSIONS_CODE_PHOTO, Manifest.permission.READ_EXTERNAL_STORAGE);
-        }
-    }
 
     private void refreshSelectCount() {
-
+        tv_select_finish.setText(getString(R.string.selected, mSelectPhotoMap.size(), mFunctionConfig.getMaxSize()));
     }
 
     private void setClikListener() {
         iv_back.setOnClickListener(this);
         tv_select_finish.setOnClickListener(this);
         tv_photo_folder.setOnClickListener(this);
+        lv_folder_list.setOnItemClickListener(this);
+        gv_photo_list.setOnItemClickListener(this);
 
     }
 
@@ -168,10 +162,19 @@ public class PhotoSelectActivity extends BasePhotoActivity implements View.OnCli
         int id = v.getId();
         switch (id) {
             case R.id.tv_select_finish:
+                if (PhotoFinal.getCallback() != null)
+                    PhotoFinal.getCallback().onHanlderSuccess(HANDLER_REFRESH_LIST_EVENT, new ArrayList<PhotoInfo>(mSelectPhotoMap.values()));
+                this.finish();
                 break;
             case R.id.iv_back:
+                this.finish();
                 break;
             case R.id.tv_photo_folder:
+                if (ll_folder_panel.getVisibility() == View.GONE) {
+                    ll_folder_panel.setVisibility(View.VISIBLE);
+                } else {
+                    ll_folder_panel.setVisibility(View.GONE);
+                }
                 break;
             default:
                 break;
@@ -211,15 +214,48 @@ public class PhotoSelectActivity extends BasePhotoActivity implements View.OnCli
         mHanlder.sendEmptyMessageDelayed(HANDLER_REFRESH_LIST_EVENT, 100);
     }
 
-    @Override
-    public void onPermissionsGranted(List<String> list) {
-        getPhotos();
-    }
 
     @Override
-    public void onPermissionsDenied(List<String> list) {
-        tv_empty_view.setText("无法打开相册");
-        tv_select_finish.setVisibility(View.GONE);
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if (parent.getId() == R.id.lv_folder_list) {
+            onItemClickForFolderList(position);
+        } else {
+            onItemClickForPhotoList(view, position);
+        }
     }
 
+
+    private void onItemClickForFolderList(int position) {
+        ll_folder_panel.setVisibility(View.GONE);
+        mCurrentList.clear();
+        PhotoFolderInfo photoFolderInfo = mAllPhotoFolderList.get(position);
+        mCurrentList.addAll(photoFolderInfo.getPhotoInfoList());
+        mPhotoListAdapter.notifyDataSetChanged();
+        mFolderListAdapter.setmSelectPhotoFolderInfo(photoFolderInfo);
+        mFolderListAdapter.notifyDataSetChanged();
+        if (mCurrentList.size() == 0) {
+            tv_empty_view.setText("没有照片");
+        }
+
+    }
+
+
+    private void onItemClickForPhotoList(View view, int position) {
+        PhotoListAdapter.PhotoViewHolder holder = (PhotoListAdapter.PhotoViewHolder) view.getTag();
+        PhotoInfo photoInfo = mCurrentList.get(position);
+        if (mSelectPhotoMap.containsKey(photoInfo.getPhotoPath())) {
+            // selected
+            mSelectPhotoMap.remove(photoInfo.getPhotoPath());
+            if (holder != null) holder.iv_check.setSelected(false);
+        } else {
+            // un selected
+            if (mSelectPhotoMap.size() == mFunctionConfig.getMaxSize()) {
+                Toast.makeText(this, "最多只能选择" + PhotoFinal.getFunctionConfig().getMaxSize(), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            mSelectPhotoMap.put(photoInfo.getPhotoPath(), photoInfo);
+            if (holder != null) holder.iv_check.setSelected(true);
+        }
+        refreshSelectCount();
+    }
 }

@@ -6,8 +6,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import cn.liweiqin.testselectphoto.CoreConfig;
 import cn.liweiqin.testselectphoto.FunctionConfig;
 import cn.liweiqin.testselectphoto.PhotoFinal;
@@ -86,6 +88,12 @@ public class MainActivity extends AppCompatActivity {
     private PhotoFinal.OnHanlderResultCallback mOnHanlderResultCallback = new PhotoFinal.OnHanlderResultCallback() {
         @Override
         public void onHanlderSuccess(int reqeustCode, List<PhotoInfo> resultList) {
+            if (reqeustCode == PhotoSelectActivity.HANDLER_REFRESH_LIST_EVENT) {
+                //是选择图片回来的照片
+                Toast.makeText(getApplicationContext(), "size:" + resultList.size(), Toast.LENGTH_LONG).show();
+            } else if (reqeustCode == PhotoSelectActivity.HANLDER_TAKE_PHOTO_EVENT) {
+                //是拍照带回来的照片
+            }
 
         }
 

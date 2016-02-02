@@ -20,11 +20,14 @@ public class PhotoListAdapter extends ViewHolderAdapter<PhotoListAdapter.PhotoVi
 
     private int mScreenWidth;
     private Map<String, PhotoInfo> mSelectList;
+    private int mRowWidth;
+
 
     public PhotoListAdapter(Activity activity, List<PhotoInfo> list, Map<String, PhotoInfo> selectList, int mScreenWidth) {
         super(activity, list);
         this.mScreenWidth = mScreenWidth;
         this.mSelectList = selectList;
+        this.mRowWidth = mScreenWidth / 3;
     }
 
     @Override
@@ -37,7 +40,7 @@ public class PhotoListAdapter extends ViewHolderAdapter<PhotoListAdapter.PhotoVi
     @Override
     public void onBindViewHolder(PhotoViewHolder viewHolder, int position) {
         PhotoInfo info = getData().get(position);
-        PhotoUtil.display((Activity) getContext(), info.getPhotoPath(), viewHolder.iv_thumb);
+        PhotoUtil.display((Activity) getContext(), info.getPhotoPath(), viewHolder.iv_thumb, mRowWidth, mRowWidth);
         if (mSelectList.get(info.getPhotoPath()) != null) { // is selected..
             viewHolder.iv_check.setSelected(true);
         } else {
@@ -52,11 +55,11 @@ public class PhotoListAdapter extends ViewHolderAdapter<PhotoListAdapter.PhotoVi
     }
 
 
-    public class PhotoViewHolder extends ViewHolderAdapter.ViewHolder {
+    public static class PhotoViewHolder extends ViewHolderAdapter.ViewHolder {
 
-        ImageView iv_thumb;
-        ImageView iv_check;
-        View mView;
+        public ImageView iv_thumb;
+        public ImageView iv_check;
+        public View mView;
 
         public PhotoViewHolder(View view) {
             super(view);

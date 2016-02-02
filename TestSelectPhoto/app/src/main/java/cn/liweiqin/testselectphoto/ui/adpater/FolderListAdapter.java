@@ -42,7 +42,7 @@ public class FolderListAdapter extends ViewHolderAdapter<FolderListAdapter.Folde
     public void onBindViewHolder(FolderViewHolder viewHolder, int position) {
         PhotoFolderInfo mPhotoFolderInfo = getData().get(position);
         if (null != mPhotoFolderInfo.getCoverPhoto())
-            PhotoUtil.display((Activity) getContext(), mPhotoFolderInfo.getCoverPhoto().getPhotoPath(), viewHolder.iv_folder_check);
+            PhotoUtil.display((Activity) getContext(), mPhotoFolderInfo.getCoverPhoto().getPhotoPath(), viewHolder.iv_cover,200,200);
         if (null != mPhotoFolderInfo.getPhotoInfoList())
             viewHolder.tv_photo_count.setText(String.valueOf(mPhotoFolderInfo.getPhotoInfoList().size()));
         if (null != mPhotoFolderInfo.getFolderName())
