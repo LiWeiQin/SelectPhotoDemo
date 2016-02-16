@@ -17,7 +17,7 @@ import cn.liweiqin.testselectphoto.utils.DeviceUtils;
  */
 public class PhotoFinal {
 
-    public static final int PERMISSIONS_CODE_PHOTO = 2001;
+    public static int PICTURE_MAX_SIZE = 5;
 
     private static FunctionConfig mDefaultFunctionConfig;
     private static FunctionConfig mCurrentFunctionConfig;

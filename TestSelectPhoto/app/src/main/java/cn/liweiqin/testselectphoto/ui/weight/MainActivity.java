@@ -1,22 +1,26 @@
 package cn.liweiqin.testselectphoto.ui.weight;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.liweiqin.testselectphoto.BasePhotoActivity;
 import cn.liweiqin.testselectphoto.CoreConfig;
 import cn.liweiqin.testselectphoto.FunctionConfig;
 import cn.liweiqin.testselectphoto.PhotoFinal;
 import cn.liweiqin.testselectphoto.R;
 import cn.liweiqin.testselectphoto.model.PhotoInfo;
+import cn.liweiqin.testselectphoto.ui.adpater.PhotoListAdapter;
+import cn.liweiqin.testselectphoto.ui.adpater.PhotoShowListAdpater;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BasePhotoActivity implements AdapterView.OnItemClickListener {
 
     private final int REQUEST_CODE_CAMERA = 1000;//打开照相机的标识符
     private final int REQUEST_CODE_MUTI = 1001;//打开相册的标识符
@@ -25,10 +29,18 @@ public class MainActivity extends AppCompatActivity {
      */
     private ArrayList<String> sekectList = new ArrayList<String>();
 
+    private GridView selectView;
+    private PhotoShowListAdpater listAdpater;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        selectView = (GridView) findViewById(R.id.gv_selected);
+        listAdpater = new PhotoShowListAdpater(MainActivity.this, sekectList, mScreenWidth);
+        selectView.setAdapter(listAdpater);
+        selectView.setOnItemClickListener(this);
+
     }
 
     @Override
@@ -54,22 +66,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * 打开相册
-     *
-     * @param v
-     */
-    public void openMuit(View v) {
-        final FunctionConfig functionConfig = initConfig();
-        PhotoFinal.openMuti(REQUEST_CODE_MUTI, functionConfig, mOnHanlderResultCallback);
-
-    }
-
-    /**
      * 加载配置的信息
      */
     private FunctionConfig initConfig() {
         final FunctionConfig.Builder functionBuilder = new FunctionConfig.Builder();
-        final FunctionConfig functionConfig = functionBuilder.setMaxSize(5)//设置最大选择数
+        final FunctionConfig functionConfig = functionBuilder.setMaxSize(PhotoFinal.PICTURE_MAX_SIZE)//设置最大选择数
                 .setSelected(sekectList)//设置选泽的照片集
                 .build();
         final CoreConfig.Builder corConfigBuilder = new CoreConfig.Builder(MainActivity.this);
@@ -81,7 +82,6 @@ public class MainActivity extends AppCompatActivity {
         return functionConfig;
     }
 
-
     /**
      * 回调
      */
@@ -90,7 +90,12 @@ public class MainActivity extends AppCompatActivity {
         public void onHanlderSuccess(int reqeustCode, List<PhotoInfo> resultList) {
             if (reqeustCode == PhotoSelectActivity.HANDLER_REFRESH_LIST_EVENT) {
                 //是选择图片回来的照片
-                Toast.makeText(getApplicationContext(), "size:" + resultList.size(), Toast.LENGTH_LONG).show();
+                sekectList.clear();
+                for (PhotoInfo info : resultList) {
+                    sekectList.add(info.getPhotoPath());
+                }
+                listAdpater.notifyDataSetChanged();
+                // Toast.makeText(getApplicationContext(), "size:" + resultList.size(), Toast.LENGTH_LONG).show();
             } else if (reqeustCode == PhotoSelectActivity.HANLDER_TAKE_PHOTO_EVENT) {
                 //是拍照带回来的照片
             }
@@ -103,4 +108,12 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        PhotoShowListAdpater.PhotoViewHolder vh = (PhotoShowListAdpater.PhotoViewHolder) view.getTag();
+        if (position == sekectList.size() && vh.iv_thumb.getVisibility() != View.GONE) {
+            final FunctionConfig functionConfig = initConfig();
+            PhotoFinal.openMuti(REQUEST_CODE_MUTI, functionConfig, mOnHanlderResultCallback);
+        }
+    }
 }

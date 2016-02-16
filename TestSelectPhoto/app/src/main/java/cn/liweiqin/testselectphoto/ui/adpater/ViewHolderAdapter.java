@@ -5,8 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 
 import java.util.List;
+
+import cn.liweiqin.testselectphoto.R;
 
 /**
  * Created by liweiqin on 2016/2/1.
@@ -80,6 +83,5 @@ public abstract class ViewHolderAdapter<VH extends ViewHolderAdapter.ViewHolder,
         public ViewHolder(View view) {
             this.view = view;
         }
-
     }
 }
