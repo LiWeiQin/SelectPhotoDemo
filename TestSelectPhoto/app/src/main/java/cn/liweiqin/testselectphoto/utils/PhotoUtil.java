@@ -40,13 +40,30 @@ public class PhotoUtil {
         imageView.setImageResource(R.drawable.ic_gf_default_photo);
         if (null == path) {
             Picasso.with(activity).load(R.drawable.ic_gf_default_photo).into(imageView);
+        } else {
+            Picasso.with(activity)
+                    .load(new File(path))
+                    .error(defaultDrawable)
+                    .resize(width, height)
+                    .centerInside()
+                    .into(imageView);
         }
-        Picasso.with(activity)
-                .load(new File(path))
-                .error(defaultDrawable)
-                .resize(width, height)
-                .centerInside()
-                .into(imageView);
+
+    }
+
+    public static void display(Activity activity, int drawable, ImageView imageView, int width, int height) {
+        if (isNotNull(activity, imageView)) return;
+        imageView.setImageResource(R.drawable.ic_gf_default_photo);
+        if (0 == drawable) {
+            Picasso.with(activity).load(R.drawable.ic_gf_default_photo).into(imageView);
+        } else {
+            Picasso.with(activity)
+                    .load(drawable)
+                    .error(defaultDrawable)
+                    .resize(width, height)
+                    .centerInside()
+                    .into(imageView);
+        }
 
     }
 

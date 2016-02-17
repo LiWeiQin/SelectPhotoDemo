@@ -22,8 +22,8 @@ import cn.liweiqin.testselectphoto.ui.adpater.PhotoShowListAdpater;
 
 public class MainActivity extends BasePhotoActivity implements AdapterView.OnItemClickListener {
 
-    private final int REQUEST_CODE_CAMERA = 1000;//打开照相机的标识符
-    private final int REQUEST_CODE_MUTI = 1001;//打开相册的标识符
+    public final static int REQUEST_CODE_CAMERA = 1000;//打开照相机的标识符
+    public final static int REQUEST_CODE_MUTI = 1001;//打开相册的标识符
     /**
      * 存放选择的照片
      */

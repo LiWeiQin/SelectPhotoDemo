@@ -79,17 +79,15 @@ public class PhotoFinal {
      * 拍照
      *
      * @param requestCode
-     * @param config
      * @param callback
      */
-    public static void openCamera(int requestCode, FunctionConfig config, OnHanlderResultCallback callback) {
+    public static void openCamera(int requestCode, OnHanlderResultCallback callback) {
         if (!DeviceUtils.existSDCard()) {
             Toast.makeText(mCoreConfig.getContext(), "没有SD卡", Toast.LENGTH_SHORT).show();
             return;
         }
         mRequestCode = requestCode;
         mCallback = callback;
-        mCurrentFunctionConfig = config;
 
         Intent intent = new Intent(mCoreConfig.getContext(), PhotoEditActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

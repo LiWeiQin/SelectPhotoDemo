@@ -201,13 +201,23 @@ public class PhotoSelectActivity extends BasePhotoActivity implements View.OnCli
                 mCurrentList.clear();
                 if (allFolderList.size() > 0) {
                     if (allFolderList.get(0).getPhotoInfoList() != null) {
-                        mCurrentList.addAll(allFolderList.get(0).getPhotoInfoList());
+                        //多加一张拍照的图片
+                        setAllPhotoList(allFolderList);
                     }
                 }
                 refreshAdapter();
             }
         }.start();
 
+    }
+
+    private void setAllPhotoList(List<PhotoFolderInfo> allFolderList) {
+        PhotoInfo photoInfo = new PhotoInfo();
+        photoInfo.setPhotoId(-100);
+        photoInfo.setPhotoPath(null);
+        photoInfo.setDrawable(R.drawable.ic_gf_default_photo);
+        mCurrentList.add(photoInfo);
+        mCurrentList.addAll(allFolderList.get(0).getPhotoInfoList());
     }
 
     private void refreshAdapter() {
@@ -229,9 +239,14 @@ public class PhotoSelectActivity extends BasePhotoActivity implements View.OnCli
         ll_folder_panel.setVisibility(View.GONE);
         mCurrentList.clear();
         PhotoFolderInfo photoFolderInfo = mAllPhotoFolderList.get(position);
-        mCurrentList.addAll(photoFolderInfo.getPhotoInfoList());
-        mPhotoListAdapter.notifyDataSetChanged();
+        if (position == 0) {
+            setAllPhotoList(mAllPhotoFolderList);
+        } else {
+            mCurrentList.addAll(photoFolderInfo.getPhotoInfoList());
+        }
         mFolderListAdapter.setmSelectPhotoFolderInfo(photoFolderInfo);
+
+        mPhotoListAdapter.notifyDataSetChanged();
         mFolderListAdapter.notifyDataSetChanged();
         if (mCurrentList.size() == 0) {
             tv_empty_view.setText("没有照片");
@@ -243,18 +258,22 @@ public class PhotoSelectActivity extends BasePhotoActivity implements View.OnCli
     private void onItemClickForPhotoList(View view, int position) {
         PhotoListAdapter.PhotoViewHolder holder = (PhotoListAdapter.PhotoViewHolder) view.getTag();
         PhotoInfo photoInfo = mCurrentList.get(position);
-        if (mSelectPhotoMap.containsKey(photoInfo.getPhotoPath())) {
-            // selected
-            mSelectPhotoMap.remove(photoInfo.getPhotoPath());
-            if (holder != null) holder.iv_check.setSelected(false);
-        } else {
-            // un selected
-            if (mSelectPhotoMap.size() == mFunctionConfig.getMaxSize()) {
-                Toast.makeText(this, "最多只能选择" + PhotoFinal.getFunctionConfig().getMaxSize(), Toast.LENGTH_SHORT).show();
-                return;
+        if (photoInfo.getPhotoId() != -100 && photoInfo.getDrawable() == 0) {
+            if (mSelectPhotoMap.containsKey(photoInfo.getPhotoPath())) {
+                // selected
+                mSelectPhotoMap.remove(photoInfo.getPhotoPath());
+                if (holder != null) holder.iv_check.setSelected(false);
+            } else {
+                // un selected
+                if (mSelectPhotoMap.size() == mFunctionConfig.getMaxSize()) {
+                    Toast.makeText(this, "最多只能选择" + PhotoFinal.getFunctionConfig().getMaxSize(), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                mSelectPhotoMap.put(photoInfo.getPhotoPath(), photoInfo);
+                if (holder != null) holder.iv_check.setSelected(true);
             }
-            mSelectPhotoMap.put(photoInfo.getPhotoPath(), photoInfo);
-            if (holder != null) holder.iv_check.setSelected(true);
+        } else {
+            PhotoFinal.openCamera(MainActivity.REQUEST_CODE_CAMERA, PhotoFinal.getCallback());
         }
         refreshSelectCount();
     }

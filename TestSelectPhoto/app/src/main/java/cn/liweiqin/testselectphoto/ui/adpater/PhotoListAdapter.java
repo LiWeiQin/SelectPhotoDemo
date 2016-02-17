@@ -31,6 +31,11 @@ public class PhotoListAdapter extends ViewHolderAdapter<PhotoListAdapter.PhotoVi
     }
 
     @Override
+    public int getCount() {
+        return super.getCount();
+    }
+
+    @Override
     public PhotoViewHolder onCreateViewHolder(ViewGroup viewGroup, int position) {
         View view = inflate(R.layout.item_photo, viewGroup);
         setHeight(view);
@@ -40,13 +45,18 @@ public class PhotoListAdapter extends ViewHolderAdapter<PhotoListAdapter.PhotoVi
     @Override
     public void onBindViewHolder(PhotoViewHolder viewHolder, int position) {
         PhotoInfo info = getData().get(position);
-        PhotoUtil.display((Activity) getContext(), info.getPhotoPath(), viewHolder.iv_thumb, mRowWidth, mRowWidth);
-        if (mSelectList.get(info.getPhotoPath()) != null) { // is selected..
-            viewHolder.iv_check.setSelected(true);
+        if (info.getDrawable() != 0 && info.getPhotoId() == -100) {
+            PhotoUtil.display((Activity) getContext(), info.getDrawable(), viewHolder.iv_thumb, mRowWidth, mRowWidth);
+            viewHolder.iv_check.setVisibility(View.GONE);
         } else {
-            viewHolder.iv_check.setSelected(false);
+            PhotoUtil.display((Activity) getContext(), info.getPhotoPath(), viewHolder.iv_thumb, mRowWidth, mRowWidth);
+            viewHolder.iv_check.setVisibility(View.VISIBLE);
+            if (mSelectList.get(info.getPhotoPath()) != null) { // is selected..
+                viewHolder.iv_check.setSelected(true);
+            } else {
+                viewHolder.iv_check.setSelected(false);
+            }
         }
-
     }
 
     public void setHeight(View view) {

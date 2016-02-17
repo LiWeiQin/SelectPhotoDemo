@@ -11,8 +11,11 @@ public class PhotoInfo implements Serializable {
 
     private int photoId;
     private String photoPath;
+    private int drawable;
+
     private int width;
     private int height;
+
 
     public int getHeight() {
         return height;
@@ -44,5 +47,13 @@ public class PhotoInfo implements Serializable {
 
     public void setPhotoId(int photoId) {
         this.photoId = photoId;
+    }
+
+    public int getDrawable() {
+        return drawable;
+    }
+
+    public void setDrawable(int drawable) {
+        this.drawable = drawable;
     }
 }
