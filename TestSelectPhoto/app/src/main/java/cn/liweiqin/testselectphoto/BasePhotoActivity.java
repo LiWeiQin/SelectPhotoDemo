@@ -15,7 +15,7 @@ public abstract class BasePhotoActivity extends Activity {
     protected int mScreenWidth = 720;
     protected int mScreenHeight = 1280;
 
-    private MediaScanner mMediaScanner;
+    protected MediaScanner mMediaScanner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

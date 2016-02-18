@@ -1,4 +1,4 @@
-package cn.liweiqin.testselectphoto;
+package cn.liweiqin.testselectphoto.core;
 
 
 import java.util.ArrayList;

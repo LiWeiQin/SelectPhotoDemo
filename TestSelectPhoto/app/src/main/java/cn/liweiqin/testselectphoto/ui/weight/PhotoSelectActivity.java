@@ -18,11 +18,12 @@ import java.util.HashMap;
 import java.util.List;
 
 import cn.liweiqin.testselectphoto.BasePhotoActivity;
-import cn.liweiqin.testselectphoto.FunctionConfig;
-import cn.liweiqin.testselectphoto.PhotoFinal;
+import cn.liweiqin.testselectphoto.core.FunctionConfig;
+import cn.liweiqin.testselectphoto.core.PhotoFinal;
 import cn.liweiqin.testselectphoto.R;
 import cn.liweiqin.testselectphoto.model.PhotoFolderInfo;
 import cn.liweiqin.testselectphoto.model.PhotoInfo;
+import cn.liweiqin.testselectphoto.ui.Callback;
 import cn.liweiqin.testselectphoto.ui.adpater.FolderListAdapter;
 import cn.liweiqin.testselectphoto.ui.adpater.PhotoListAdapter;
 import cn.liweiqin.testselectphoto.utils.PhotoUtil;
@@ -30,13 +31,15 @@ import cn.liweiqin.testselectphoto.utils.PhotoUtil;
 
 /**
  * 这里就是展示图片的界面了
- * <p/>
+ * <p>
  * Created by liweiqin on 2016/1/31.
  */
-public class PhotoSelectActivity extends BasePhotoActivity implements View.OnClickListener, AbsListView.OnItemClickListener {
+public class PhotoSelectActivity extends BasePhotoActivity implements View.OnClickListener, AbsListView.OnItemClickListener, Callback {
 
     public static final int HANLDER_TAKE_PHOTO_EVENT = 1000;
     public static final int HANDLER_REFRESH_LIST_EVENT = 1002;
+
+    private Callback mCallback;
 
     /**
      * loading...
@@ -116,6 +119,7 @@ public class PhotoSelectActivity extends BasePhotoActivity implements View.OnCli
         setContentView(R.layout.activity_select);
         initView();
         setClikListener();
+        setCallback(this);
 
         mCurrentList = new ArrayList<PhotoInfo>();
         mPhotoListAdapter = new PhotoListAdapter(PhotoSelectActivity.this, mCurrentList, mSelectPhotoMap, mScreenWidth);
@@ -183,7 +187,7 @@ public class PhotoSelectActivity extends BasePhotoActivity implements View.OnCli
 
     /**
      * 获取照片集
-     * <p/>
+     * <p>
      * 先清除图片集列表 再加载图片集列表 清除单前图集的所有图片 再加载当前图片
      */
     public void getPhotos() {
@@ -273,8 +277,21 @@ public class PhotoSelectActivity extends BasePhotoActivity implements View.OnCli
                 if (holder != null) holder.iv_check.setSelected(true);
             }
         } else {
-            PhotoFinal.openCamera(MainActivity.REQUEST_CODE_CAMERA, PhotoFinal.getCallback());
+            PhotoFinal.openCamera(MainActivity.REQUEST_CODE_CAMERA, PhotoFinal.getCallback(), mCallback);
         }
         refreshSelectCount();
+    }
+
+
+    public void setCallback(Callback callback) {
+        this.mCallback = callback;
+    }
+
+    @Override
+    public void callback() {
+        mAllPhotoFolderList.clear();
+        mSelectPhotoMap.clear();
+        this.finish();
+
     }
 }

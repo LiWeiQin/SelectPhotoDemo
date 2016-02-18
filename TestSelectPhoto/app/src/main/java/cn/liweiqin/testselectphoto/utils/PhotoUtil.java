@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import cn.liweiqin.testselectphoto.PhotoFinal;
+import cn.liweiqin.testselectphoto.core.PhotoFinal;
 import cn.liweiqin.testselectphoto.R;
 import cn.liweiqin.testselectphoto.model.PhotoFolderInfo;
 import cn.liweiqin.testselectphoto.model.PhotoInfo;

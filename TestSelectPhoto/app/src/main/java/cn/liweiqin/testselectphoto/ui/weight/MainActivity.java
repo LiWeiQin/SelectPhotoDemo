@@ -12,12 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.liweiqin.testselectphoto.BasePhotoActivity;
-import cn.liweiqin.testselectphoto.CoreConfig;
-import cn.liweiqin.testselectphoto.FunctionConfig;
-import cn.liweiqin.testselectphoto.PhotoFinal;
+import cn.liweiqin.testselectphoto.core.CoreConfig;
+import cn.liweiqin.testselectphoto.core.FunctionConfig;
+import cn.liweiqin.testselectphoto.core.PhotoFinal;
 import cn.liweiqin.testselectphoto.R;
 import cn.liweiqin.testselectphoto.model.PhotoInfo;
-import cn.liweiqin.testselectphoto.ui.adpater.PhotoListAdapter;
 import cn.liweiqin.testselectphoto.ui.adpater.PhotoShowListAdpater;
 
 public class MainActivity extends BasePhotoActivity implements AdapterView.OnItemClickListener {
@@ -98,6 +97,8 @@ public class MainActivity extends BasePhotoActivity implements AdapterView.OnIte
                 // Toast.makeText(getApplicationContext(), "size:" + resultList.size(), Toast.LENGTH_LONG).show();
             } else if (reqeustCode == PhotoSelectActivity.HANLDER_TAKE_PHOTO_EVENT) {
                 //是拍照带回来的照片
+                sekectList.add(resultList.get(0).getPhotoPath());
+                listAdpater.notifyDataSetChanged();
             }
 
         }

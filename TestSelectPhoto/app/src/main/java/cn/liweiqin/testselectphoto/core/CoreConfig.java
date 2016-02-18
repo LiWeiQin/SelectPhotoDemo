@@ -1,4 +1,4 @@
-package cn.liweiqin.testselectphoto;
+package cn.liweiqin.testselectphoto.core;
 
 import android.content.Context;
 import android.os.Environment;
@@ -48,6 +48,7 @@ public class CoreConfig {
     public Context getContext() {
         return context;
     }
+
 
     public boolean isDebug() {
         return debug;
