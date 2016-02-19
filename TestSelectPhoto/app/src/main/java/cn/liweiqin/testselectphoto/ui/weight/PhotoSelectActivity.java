@@ -219,7 +219,7 @@ public class PhotoSelectActivity extends BasePhotoActivity implements View.OnCli
         PhotoInfo photoInfo = new PhotoInfo();
         photoInfo.setPhotoId(-100);
         photoInfo.setPhotoPath(null);
-        photoInfo.setDrawable(R.drawable.ic_gf_default_photo);
+        photoInfo.setDrawable(R.drawable.photo_camera);
         mCurrentList.add(photoInfo);
         mCurrentList.addAll(allFolderList.get(0).getPhotoInfoList());
     }
