@@ -43,6 +43,7 @@ public class PhotoUtil {
         } else {
             Picasso.with(activity)
                     .load(new File(path))
+                    .placeholder(R.drawable.ic_gf_default_photo)
                     .error(defaultDrawable)
                     .resize(width, height)
                     .centerInside()

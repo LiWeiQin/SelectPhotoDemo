@@ -55,6 +55,7 @@
             android:layout_height="match_parent"
             android:cacheColorHint="@android:color/transparent"
             android:clipToPadding="false"
+            android:background="@android:color/black"
             android:fadingEdge="none"
             android:horizontalSpacing="2dp"
             android:numColumns="3"

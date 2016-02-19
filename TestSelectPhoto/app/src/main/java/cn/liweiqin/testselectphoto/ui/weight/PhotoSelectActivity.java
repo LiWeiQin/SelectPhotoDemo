@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import cn.liweiqin.testselectphoto.BasePhotoActivity;
@@ -90,7 +91,7 @@ public class PhotoSelectActivity extends BasePhotoActivity implements View.OnCli
     /**
      * current selected picture
      */
-    private HashMap<String, PhotoInfo> mSelectPhotoMap = new HashMap<>();
+    private LinkedHashMap<String, PhotoInfo> mSelectPhotoMap = new LinkedHashMap<>();
 
 
     private Handler mHanlder = new Handler() {

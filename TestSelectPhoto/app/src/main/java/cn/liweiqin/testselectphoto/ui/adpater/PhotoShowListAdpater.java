@@ -51,7 +51,7 @@ public class PhotoShowListAdpater extends ViewHolderAdapter<PhotoShowListAdpater
     @Override
     public void onBindViewHolder(PhotoViewHolder viewHolder, int position) {
         if (position == mSelectList.size()) {
-            viewHolder.iv_thumb.setImageResource(R.drawable.icon_addpic_unfocused);
+            PhotoUtil.display((Activity) getContext(), R.drawable.icon_addpic_unfocused, viewHolder.iv_thumb, mRowWidth, mRowWidth);
             if (position == PhotoFinal.PICTURE_MAX_SIZE) {
                 viewHolder.iv_thumb.setVisibility(View.GONE);
             }
