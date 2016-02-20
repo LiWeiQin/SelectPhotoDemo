@@ -241,9 +241,10 @@ public class PhotoSelectActivity extends BasePhotoActivity implements View.OnCli
 
 
     private void onItemClickForFolderList(int position) {
+        PhotoFolderInfo photoFolderInfo = mAllPhotoFolderList.get(position);
+        tv_photo_folder.setText(photoFolderInfo.getFolderName());
         ll_folder_panel.setVisibility(View.GONE);
         mCurrentList.clear();
-        PhotoFolderInfo photoFolderInfo = mAllPhotoFolderList.get(position);
         if (position == 0) {
             setAllPhotoList(mAllPhotoFolderList);
         } else {
@@ -253,6 +254,7 @@ public class PhotoSelectActivity extends BasePhotoActivity implements View.OnCli
 
         mPhotoListAdapter.notifyDataSetChanged();
         mFolderListAdapter.notifyDataSetChanged();
+        gv_photo_list.smoothScrollToPosition(0);
         if (mCurrentList.size() == 0) {
             tv_empty_view.setText("没有照片");
         }

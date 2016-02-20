@@ -98,8 +98,7 @@ public class PhotoEditActivity extends BasePhotoActivity {
 
     private void takeResult(PhotoInfo info) {
         photoInfo = info;
-        int pjotoHeight = mScreenHeight - 45;
-        PhotoUtil.display(PhotoEditActivity.this, info.getPhotoPath(), iv_take_photo, mScreenWidth, pjotoHeight);
+        PhotoUtil.display(PhotoEditActivity.this, info.getPhotoPath(), iv_take_photo, mScreenWidth, mScreenHeight);
     }
 
     /**
