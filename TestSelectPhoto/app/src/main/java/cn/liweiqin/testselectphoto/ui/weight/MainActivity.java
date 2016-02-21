@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.liweiqin.testselectphoto.BasePhotoActivity;
-import cn.liweiqin.testselectphoto.core.CoreConfig;
 import cn.liweiqin.testselectphoto.core.FunctionConfig;
 import cn.liweiqin.testselectphoto.core.PhotoFinal;
 import cn.liweiqin.testselectphoto.R;
@@ -21,8 +20,6 @@ import cn.liweiqin.testselectphoto.ui.adpater.PhotoShowListAdpater;
 
 public class MainActivity extends BasePhotoActivity implements AdapterView.OnItemClickListener {
 
-    public final static int REQUEST_CODE_CAMERA = 1000;//打开照相机的标识符
-    public final static int REQUEST_CODE_MUTI = 1001;//打开相册的标识符
     /**
      * 存放选择的照片
      */
@@ -69,15 +66,12 @@ public class MainActivity extends BasePhotoActivity implements AdapterView.OnIte
      */
     private FunctionConfig initConfig() {
         final FunctionConfig.Builder functionBuilder = new FunctionConfig.Builder();
-        final FunctionConfig functionConfig = functionBuilder.setMaxSize(PhotoFinal.PICTURE_MAX_SIZE)//设置最大选择数
+        final FunctionConfig functionConfig = functionBuilder.setMaxSize(5)//设置最大选择数
                 .setSelected(sekectList)//设置选泽的照片集
+                .setContext(this)//设置上下文对象
+                .setTakePhotoFolder(null)//设置拍照存放地址 默认为null
                 .build();
-        final CoreConfig.Builder corConfigBuilder = new CoreConfig.Builder(MainActivity.this);
-        final CoreConfig coreConfig = corConfigBuilder.setDebug(true)//设置调试
-                .setFunctionConfig(functionConfig)//设置参数配置
-                .setTakePhotoFolder(null)//设置拍照的存放地址
-                .build();
-        PhotoFinal.init(coreConfig);
+        PhotoFinal.init(functionConfig);
         return functionConfig;
     }
 
@@ -87,7 +81,7 @@ public class MainActivity extends BasePhotoActivity implements AdapterView.OnIte
     private PhotoFinal.OnHanlderResultCallback mOnHanlderResultCallback = new PhotoFinal.OnHanlderResultCallback() {
         @Override
         public void onHanlderSuccess(int reqeustCode, List<PhotoInfo> resultList) {
-            if (reqeustCode == PhotoSelectActivity.HANDLER_REFRESH_LIST_EVENT) {
+            if (reqeustCode == PhotoFinal.REQUEST_CODE_MUTI) {
                 //是选择图片回来的照片
                 sekectList.clear();
                 for (PhotoInfo info : resultList) {
@@ -95,7 +89,7 @@ public class MainActivity extends BasePhotoActivity implements AdapterView.OnIte
                 }
                 listAdpater.notifyDataSetChanged();
                 // Toast.makeText(getApplicationContext(), "size:" + resultList.size(), Toast.LENGTH_LONG).show();
-            } else if (reqeustCode == PhotoSelectActivity.HANLDER_TAKE_PHOTO_EVENT) {
+            } else if (reqeustCode == PhotoFinal.REQUEST_CODE_CAMERA) {
                 //是拍照带回来的照片
                 sekectList.add(resultList.get(0).getPhotoPath());
                 listAdpater.notifyDataSetChanged();
@@ -114,7 +108,7 @@ public class MainActivity extends BasePhotoActivity implements AdapterView.OnIte
         PhotoShowListAdpater.PhotoViewHolder vh = (PhotoShowListAdpater.PhotoViewHolder) view.getTag();
         if (position == sekectList.size() && vh.iv_thumb.getVisibility() != View.GONE) {
             final FunctionConfig functionConfig = initConfig();
-            PhotoFinal.openMuti(REQUEST_CODE_MUTI, functionConfig, mOnHanlderResultCallback);
+            PhotoFinal.openMuti(functionConfig, mOnHanlderResultCallback);
         }
     }
 }

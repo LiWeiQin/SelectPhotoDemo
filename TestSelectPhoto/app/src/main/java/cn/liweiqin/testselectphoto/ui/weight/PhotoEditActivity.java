@@ -24,7 +24,6 @@ import cn.liweiqin.testselectphoto.utils.PhotoUtil;
  */
 public class PhotoEditActivity extends BasePhotoActivity {
 
-    public static final String TAKE_PHOTO_ACTION = "take_photo_action";
     private static final int TAKE_REQUEST_CODE = 1001;
 
     private Uri mTakePhotoUri;
@@ -45,7 +44,7 @@ public class PhotoEditActivity extends BasePhotoActivity {
         if (photoInfo != null) {
             ArrayList<PhotoInfo> photoList = new ArrayList();
             photoList.add(photoInfo);
-            PhotoFinal.getCallback().onHanlderSuccess(PhotoSelectActivity.HANLDER_TAKE_PHOTO_EVENT,
+            PhotoFinal.getCallback().onHanlderSuccess(PhotoFinal.REQUEST_CODE_CAMERA,
                     photoList);
             PhotoFinal.getSelectPhotoActivityCallback().callback();
             this.finish();
@@ -58,7 +57,7 @@ public class PhotoEditActivity extends BasePhotoActivity {
      */
     protected void takePhotoAction() {
         File takePhotoFolder = null;
-        takePhotoFolder = PhotoFinal.getCoreConfig().getTakePhotoFolder();
+        takePhotoFolder = PhotoFinal.getFunctionConfig().getTakePhotoFolder();
         File toFile = new File(takePhotoFolder, "IMG" + String.valueOf(System.currentTimeMillis()) + ".jpg");
         if (FileUtils.mkdirs(takePhotoFolder)) {
             mTakePhotoUri = Uri.fromFile(toFile);

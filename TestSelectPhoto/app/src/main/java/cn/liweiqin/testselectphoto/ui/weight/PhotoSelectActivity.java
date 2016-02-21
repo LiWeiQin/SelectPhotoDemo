@@ -14,7 +14,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -32,13 +31,12 @@ import cn.liweiqin.testselectphoto.utils.PhotoUtil;
 
 /**
  * 这里就是展示图片的界面了
- * <p>
+ * <p/>
  * Created by liweiqin on 2016/1/31.
  */
 public class PhotoSelectActivity extends BasePhotoActivity implements View.OnClickListener, AbsListView.OnItemClickListener, Callback {
 
-    public static final int HANLDER_TAKE_PHOTO_EVENT = 1000;
-    public static final int HANDLER_REFRESH_LIST_EVENT = 1002;
+    private static final int HANDLER_REFRESH_LIST_EVENT = 1002;
 
     private Callback mCallback;
 
@@ -126,7 +124,6 @@ public class PhotoSelectActivity extends BasePhotoActivity implements View.OnCli
         mPhotoListAdapter = new PhotoListAdapter(PhotoSelectActivity.this, mCurrentList, mSelectPhotoMap, mScreenWidth);
         gv_photo_list.setEmptyView(tv_empty_view);
         gv_photo_list.setAdapter(mPhotoListAdapter);
-
         mAllPhotoFolderList = new ArrayList<PhotoFolderInfo>();
         mFolderListAdapter = new FolderListAdapter(PhotoSelectActivity.this, mAllPhotoFolderList);
         lv_folder_list.setAdapter(mFolderListAdapter);
@@ -168,7 +165,7 @@ public class PhotoSelectActivity extends BasePhotoActivity implements View.OnCli
         switch (id) {
             case R.id.tv_select_finish:
                 if (PhotoFinal.getCallback() != null)
-                    PhotoFinal.getCallback().onHanlderSuccess(HANDLER_REFRESH_LIST_EVENT, new ArrayList<PhotoInfo>(mSelectPhotoMap.values()));
+                    PhotoFinal.getCallback().onHanlderSuccess(PhotoFinal.REQUEST_CODE_MUTI, new ArrayList<PhotoInfo>(mSelectPhotoMap.values()));
                 this.finish();
                 break;
             case R.id.iv_back:
@@ -188,7 +185,7 @@ public class PhotoSelectActivity extends BasePhotoActivity implements View.OnCli
 
     /**
      * 获取照片集
-     * <p>
+     * <p/>
      * 先清除图片集列表 再加载图片集列表 清除单前图集的所有图片 再加载当前图片
      */
     public void getPhotos() {
@@ -208,6 +205,7 @@ public class PhotoSelectActivity extends BasePhotoActivity implements View.OnCli
                     if (allFolderList.get(0).getPhotoInfoList() != null) {
                         //多加一张拍照的图片
                         setAllPhotoList(allFolderList);
+                        mFolderListAdapter.setmSelectPhotoFolderInfo(allFolderList.get(0));
                     }
                 }
                 refreshAdapter();
@@ -280,7 +278,7 @@ public class PhotoSelectActivity extends BasePhotoActivity implements View.OnCli
                 if (holder != null) holder.iv_check.setSelected(true);
             }
         } else {
-            PhotoFinal.openCamera(MainActivity.REQUEST_CODE_CAMERA, PhotoFinal.getCallback(), mCallback);
+            PhotoFinal.openCamera(PhotoFinal.getCallback(), mCallback);
         }
         refreshSelectCount();
     }

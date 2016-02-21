@@ -18,51 +18,33 @@ import cn.liweiqin.testselectphoto.utils.DeviceUtils;
  */
 public class PhotoFinal {
 
-    public static int PICTURE_MAX_SIZE = 5;
+    public final static int REQUEST_CODE_CAMERA = 1000;//打开照相机的标识符
+    public final static int REQUEST_CODE_MUTI = 1001;//打开相册的标识符
 
-    private static FunctionConfig mDefaultFunctionConfig;
     private static FunctionConfig mCurrentFunctionConfig;
-    private static CoreConfig mCoreConfig;
-    private static int mRequestCode;
     private static OnHanlderResultCallback mCallback;
     private static Callback mSelectPhotoActivityCallback;
 
-    public static void init(CoreConfig coreConfig) {
-        mCoreConfig = coreConfig;
-        mDefaultFunctionConfig = coreConfig.getFunctionConfig();
-        if (mCoreConfig.isDebug()) {
-            Log.e(PhotoFinal.class.getSimpleName(), "init");
-        }
+    public static void init(FunctionConfig coreConfig) {
+        mCurrentFunctionConfig = coreConfig;
 
     }
 
-    public static CoreConfig getCoreConfig() {
-        return mCoreConfig;
-    }
 
     public static FunctionConfig getFunctionConfig() {
         return mCurrentFunctionConfig;
     }
 
-    public static int getRequestCode() {
-        return mRequestCode;
-    }
-
     public static OnHanlderResultCallback getCallback() {
         return mCallback;
     }
+
     public static Callback getSelectPhotoActivityCallback() {
         return mSelectPhotoActivityCallback;
     }
 
-    public static FunctionConfig copyGlobalFuncationConfig() {
-        if (mDefaultFunctionConfig != null) {
-            return mDefaultFunctionConfig.clone();
-        }
-        return null;
-    }
 
-    public static interface OnHanlderResultCallback {
+    public interface OnHanlderResultCallback {
         /**
          * 处理成功
          *
@@ -83,51 +65,55 @@ public class PhotoFinal {
     /**
      * 拍照
      *
-     * @param requestCode
      * @param callback
+     * @param mSelectCallback
      */
-    public static void openCamera(int requestCode, OnHanlderResultCallback callback, Callback mSelectCallback) {
-        if (!DeviceUtils.existSDCard()) {
-            Toast.makeText(mCoreConfig.getContext(), "没有SD卡", Toast.LENGTH_SHORT).show();
+    public static void openCamera(OnHanlderResultCallback callback, Callback mSelectCallback) {
+
+        if (mCurrentFunctionConfig == null) {
+            if (callback != null) {
+                callback.onHanlderFailure(REQUEST_CODE_CAMERA, "没有设置配置");
+            }
             return;
         }
-        mRequestCode = requestCode;
+
+        if (!DeviceUtils.existSDCard()) {
+            Toast.makeText(mCurrentFunctionConfig.getContext(), "没有SD卡", Toast.LENGTH_SHORT).show();
+            return;
+        }
         mCallback = callback;
         mSelectPhotoActivityCallback = mSelectCallback;
-        Intent intent = new Intent(mCoreConfig.getContext(), PhotoEditActivity.class);
+        Intent intent = new Intent(mCurrentFunctionConfig.getContext(), PhotoEditActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-        intent.putExtra(PhotoEditActivity.TAKE_PHOTO_ACTION, true);
-        mCoreConfig.getContext().startActivity(intent);
+        mCurrentFunctionConfig.getContext().startActivity(intent);
 
     }
 
     /**
      * 打开相册啦
      *
-     * @param requestCode
      * @param config
      * @param callback
      */
-    public static void openMuti(int requestCode, FunctionConfig config, OnHanlderResultCallback callback) {
-        if (!DeviceUtils.existSDCard()) {
-            Toast.makeText(mCoreConfig.getContext(), "没有SD卡", Toast.LENGTH_SHORT).show();
-            return;
-        }
+    public static void openMuti(FunctionConfig config, OnHanlderResultCallback callback) {
 
-        if (config == null && mDefaultFunctionConfig == null) {
+        if (config == null && mCurrentFunctionConfig == null) {
             if (callback != null) {
-                callback.onHanlderFailure(requestCode, "没有设置配置");
+                callback.onHanlderFailure(REQUEST_CODE_MUTI, "没有设置配置");
             }
             return;
         }
-        mRequestCode = requestCode;
         mCallback = callback;
         mCurrentFunctionConfig = config;
 
-        Intent intent = new Intent(mCoreConfig.getContext(), PhotoSelectActivity.class);
+        if (!DeviceUtils.existSDCard()) {
+            Toast.makeText(mCurrentFunctionConfig.getContext(), "没有SD卡", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Intent intent = new Intent(mCurrentFunctionConfig.getContext(), PhotoSelectActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        mCoreConfig.getContext().startActivity(intent);
+        mCurrentFunctionConfig.getContext().startActivity(intent);
 
     }
 

@@ -91,7 +91,6 @@ public class PhotoUtil {
     public static List<PhotoFolderInfo> getAllPhotoFolder(Activity activity, HashMap<String, PhotoInfo> mSelectPhotoMap) {
         List<PhotoFolderInfo> allFolderList = new ArrayList<>();
         List<String> selectedList = PhotoFinal.getFunctionConfig().getSelectedList();
-        List<String> filterList = PhotoFinal.getFunctionConfig().getFilterList();
 
         final ArrayList<PhotoFolderInfo> allPhotoFolderList = new ArrayList<>();
         HashMap<Integer, PhotoFolderInfo> bucketMap = new HashMap<>();
@@ -118,34 +117,32 @@ public class PhotoUtil {
                     final String path = cursor.getString(dataColumn);
                     //final String thumb = cursor.getString(thumbImageColumn);
                     File file = new File(path);
-                    if ((filterList == null || !filterList.contains(path)) && file.exists() && file.length() > 0) {
-                        final PhotoInfo photoInfo = new PhotoInfo();
-                        photoInfo.setPhotoId(imageId);
-                        photoInfo.setPhotoPath(path);
-                        //photoInfo.setThumbPath(thumb);
-                        if (allPhotoFolderInfo.getCoverPhoto() == null) {
-                            allPhotoFolderInfo.setCoverPhoto(photoInfo);
-                        }
-                        //添加到所有图片
-                        allPhotoFolderInfo.getPhotoInfoList().add(photoInfo);
+                    final PhotoInfo photoInfo = new PhotoInfo();
+                    photoInfo.setPhotoId(imageId);
+                    photoInfo.setPhotoPath(path);
+                    //photoInfo.setThumbPath(thumb);
+                    if (allPhotoFolderInfo.getCoverPhoto() == null) {
+                        allPhotoFolderInfo.setCoverPhoto(photoInfo);
+                    }
+                    //添加到所有图片
+                    allPhotoFolderInfo.getPhotoInfoList().add(photoInfo);
 
-                        //通过bucketId获取文件夹
-                        PhotoFolderInfo photoFolderInfo = bucketMap.get(bucketId);
+                    //通过bucketId获取文件夹
+                    PhotoFolderInfo photoFolderInfo = bucketMap.get(bucketId);
 
-                        if (photoFolderInfo == null) {
-                            photoFolderInfo = new PhotoFolderInfo();
-                            photoFolderInfo.setPhotoInfoList(new ArrayList<PhotoInfo>());
-                            photoFolderInfo.setFolderId(bucketId);
-                            photoFolderInfo.setFolderName(bucketName);
-                            photoFolderInfo.setCoverPhoto(photoInfo);
-                            bucketMap.put(bucketId, photoFolderInfo);
-                            allPhotoFolderList.add(photoFolderInfo);
-                        }
-                        photoFolderInfo.getPhotoInfoList().add(photoInfo);
+                    if (photoFolderInfo == null) {
+                        photoFolderInfo = new PhotoFolderInfo();
+                        photoFolderInfo.setPhotoInfoList(new ArrayList<PhotoInfo>());
+                        photoFolderInfo.setFolderId(bucketId);
+                        photoFolderInfo.setFolderName(bucketName);
+                        photoFolderInfo.setCoverPhoto(photoInfo);
+                        bucketMap.put(bucketId, photoFolderInfo);
+                        allPhotoFolderList.add(photoFolderInfo);
+                    }
+                    photoFolderInfo.getPhotoInfoList().add(photoInfo);
 
-                        if (selectedList != null && selectedList.size() > 0 && selectedList.contains(path)) {
-                            mSelectPhotoMap.put(path, photoInfo);
-                        }
+                    if (selectedList != null && selectedList.size() > 0 && selectedList.contains(path)) {
+                        mSelectPhotoMap.put(path, photoInfo);
                     }
                 }
             }

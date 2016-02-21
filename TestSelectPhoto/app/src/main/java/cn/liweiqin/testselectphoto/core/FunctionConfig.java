@@ -1,8 +1,13 @@
 package cn.liweiqin.testselectphoto.core;
 
 
+import android.content.Context;
+import android.os.Environment;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+
 import cn.liweiqin.testselectphoto.model.PhotoInfo;
 
 /**
@@ -10,20 +15,26 @@ import cn.liweiqin.testselectphoto.model.PhotoInfo;
  */
 public class FunctionConfig implements Cloneable {
 
+    private Context context;
     private int maxSize;
-    private ArrayList<String> selectedList;//选择的照片
-    private ArrayList<String> filterList;//缓存
+    private ArrayList<String> selectedList;//选择的照片 private boolean debug;
+    private File takePhotoFolder;
 
     private FunctionConfig(final Builder mBuilder) {
         this.maxSize = mBuilder.maxSize;
-        this.filterList = mBuilder.filterList;
         this.selectedList = mBuilder.selectedList;
+        this.context = mBuilder.context;
+        this.takePhotoFolder = mBuilder.takePhotoFolder;
+
+        if (takePhotoFolder == null) {
+            takePhotoFolder = new File(Environment.getExternalStorageDirectory(), "/DCIM/" + "SchoPhoto/");
+        }
+        if (!takePhotoFolder.exists()) {
+            takePhotoFolder.mkdirs();
+        }
 
     }
 
-    public ArrayList<String> getFilterList() {
-        return filterList;
-    }
 
     public ArrayList<String> getSelectedList() {
         return selectedList;
@@ -44,17 +55,21 @@ public class FunctionConfig implements Cloneable {
         return o;
     }
 
+    public Context getContext() {
+        return context;
+    }
+
+    public File getTakePhotoFolder() {
+        return this.takePhotoFolder;
+    }
+
 
     public static class Builder {
-
+        private File takePhotoFolder;
+        private Context context;
         private int maxSize;
         private ArrayList<String> selectedList;//选择的照片
-        private ArrayList<String> filterList;//缓存
 
-        public Builder setFilterList(ArrayList<String> filterList) {
-            this.filterList = filterList;
-            return this;
-        }
 
         public Builder setSelectedList(ArrayList<String> selectedList) {
             this.selectedList = selectedList;
@@ -91,6 +106,15 @@ public class FunctionConfig implements Cloneable {
             return new FunctionConfig(this);
         }
 
+        public Builder setContext(Context context) {
+            this.context = context;
+            return this;
+        }
+
+        public Builder setTakePhotoFolder(File takePhotoFolder) {
+            this.takePhotoFolder = takePhotoFolder;
+            return this;
+        }
     }
 
 }

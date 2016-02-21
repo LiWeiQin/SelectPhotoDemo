@@ -52,12 +52,19 @@ public class PhotoShowListAdpater extends ViewHolderAdapter<PhotoShowListAdpater
     public void onBindViewHolder(PhotoViewHolder viewHolder, int position) {
         if (position == mSelectList.size()) {
             PhotoUtil.display((Activity) getContext(), R.drawable.icon_addpic_unfocused, viewHolder.iv_thumb, mRowWidth, mRowWidth);
-            if (position == PhotoFinal.PICTURE_MAX_SIZE) {
+            final int maxSize = getMaxSize();
+            if (position == maxSize) {
                 viewHolder.iv_thumb.setVisibility(View.GONE);
             }
         } else {
             PhotoUtil.display((Activity) getContext(), mSelectList.get(position), viewHolder.iv_thumb, mRowWidth, mRowWidth);
         }
+    }
+
+    private int getMaxSize() {
+        if (PhotoFinal.getFunctionConfig() != null)
+            return PhotoFinal.getFunctionConfig().getMaxSize();
+        return -1;
     }
 
     public class PhotoViewHolder extends ViewHolderAdapter.ViewHolder {
